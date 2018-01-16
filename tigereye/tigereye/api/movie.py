@@ -18,8 +18,8 @@ from tigereye.models.movie import Movie
 #
 #             data_list.append(data)
 #         return jsonify(data_list)
-#仔细比较这一版和上一版本的区别,精髓就在这里了
-class MovieView():
+# 仔细比较这一版和上一版本的区别,精髓就在这里了
+class MovieView(FlaskView):
     def all(self):
         movies = Movie.query.all()
         print(movies)

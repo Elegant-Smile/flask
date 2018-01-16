@@ -6,9 +6,9 @@ class Hall(db.Model):
     cid = db.Column(db.Integer)
     name = db.Column(db.String(64), unique=True, nullable=False)
     screen = db.Column(db.String(32))
-    #音效
+    # 音效
     auto_type = db.Column(db.String(32))
-    #座位数量
+    # 座位数量
     seats_num = db.Column(db.Integer, default=0, nullable=False)
-    #状态
+    # 状态
     status = db.Column(db.Integer, nullable=False, index=True)

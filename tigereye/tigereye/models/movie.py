@@ -13,13 +13,13 @@ class Movie(db.Model):
     introduction = db.Column(db.Text)
     status = db.Column(db.Integer, nullable=False, default=0, index=True)
 
-    def __jeson__(self):
-        keys = vars(self).keys
+    def __json__(self):
+        keys = vars(self).keys()
         data = {}
         for key in keys:
             if not key.startswith('_'):
                 data[key] = getattr(self, key)
-            return data
+        return data
 
     # def __dict__(self):
     #     return self.__jeson__()

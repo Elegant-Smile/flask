@@ -3,7 +3,7 @@ from tigereye.app import create_app
 from tigereye.models import db
 app = create_app()
 manager = Manager(app)
-manager.add_command('runserver', Server('127.0.0.1', port=5000))
+manager.add_command('runserver', Server('127.0.0.1', port=8000))
 
 
 #自定义了一个createdb命令,创建数据库

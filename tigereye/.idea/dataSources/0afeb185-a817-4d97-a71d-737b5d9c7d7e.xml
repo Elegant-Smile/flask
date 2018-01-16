@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="tigereye@localhost">
+  <database-model serializer="dbm" rdbms="MYSQL" format-version="4.1">
+    <root id="1"/>
+    <schema id="2" parent="1" name="tigereye">
+      <Current>1</Current>
+      <Visible>1</Visible>
+    </schema>
+    <schema id="3" parent="1" name="axf"/>
+    <schema id="4" parent="1" name="blog"/>
+    <schema id="5" parent="1" name="ceshi"/>
+    <schema id="6" parent="1" name="DjangoProject"/>
+    <schema id="7" parent="1" name="information_schema"/>
+    <schema id="8" parent="1" name="jindong"/>
+    <schema id="9" parent="1" name="mysql"/>
+    <schema id="10" parent="1" name="performance_schema"/>
+    <schema id="11" parent="1" name="python1707db"/>
+    <schema id="12" parent="1" name="qianmu"/>
+    <schema id="13" parent="1" name="sys"/>
+    <schema id="14" parent="1" name="weidianying"/>
+    <table id="15" parent="2" name="cinema"/>
+    <table id="16" parent="2" name="hall"/>
+    <table id="17" parent="2" name="movie"/>
+    <column id="18" parent="15" name="cid">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="19" parent="15" name="name">
+      <Position>2</Position>
+      <DataType>varchar(64)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="20" parent="15" name="address">
+      <Position>3</Position>
+      <DataType>varchar(256)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="21" parent="15" name="halls">
+      <Position>4</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="22" parent="15" name="handle_fee">
+      <Position>5</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="23" parent="15" name="buy_limit">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="24" parent="15" name="status">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="25" parent="15" name="ix_cinema_status">
+      <ColNames>status</ColNames>
+    </index>
+    <index id="26" parent="15" name="name">
+      <ColNames>name</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="27" parent="15" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>cid</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="28" parent="15" name="name">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>name</UnderlyingIndexName>
+    </key>
+    <column id="29" parent="16" name="hid">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="30" parent="16" name="cid">
+      <Position>2</Position>
+      <DataType>int(11)|0</DataType>
+    </column>
+    <column id="31" parent="16" name="name">
+      <Position>3</Position>
+      <DataType>varchar(64)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="32" parent="16" name="screen">
+      <Position>4</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="33" parent="16" name="auto_type">
+      <Position>5</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="34" parent="16" name="seats_num">
+      <Position>6</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="35" parent="16" name="status">
+      <Position>7</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="36" parent="16" name="ix_hall_status">
+      <ColNames>status</ColNames>
+    </index>
+    <index id="37" parent="16" name="name">
+      <ColNames>name</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="38" parent="16" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>hid</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="39" parent="16" name="name">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>name</UnderlyingIndexName>
+    </key>
+    <column id="40" parent="17" name="mid">
+      <Position>1</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>1</SequenceIdentity>
+    </column>
+    <column id="41" parent="17" name="name">
+      <Position>2</Position>
+      <DataType>varchar(64)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="42" parent="17" name="language">
+      <Position>3</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="43" parent="17" name="subtitle">
+      <Position>4</Position>
+      <DataType>varchar(32)|0</DataType>
+    </column>
+    <column id="44" parent="17" name="show_date">
+      <Position>5</Position>
+      <DataType>date|0</DataType>
+    </column>
+    <column id="45" parent="17" name="vision">
+      <Position>6</Position>
+      <DataType>varchar(16)|0</DataType>
+    </column>
+    <column id="46" parent="17" name="model">
+      <Position>7</Position>
+      <DataType>varchar(16)|0</DataType>
+    </column>
+    <column id="47" parent="17" name="screen_size">
+      <Position>8</Position>
+      <DataType>varchar(16)|0</DataType>
+    </column>
+    <column id="48" parent="17" name="introduction">
+      <Position>9</Position>
+      <DataType>text|0</DataType>
+    </column>
+    <column id="49" parent="17" name="status">
+      <Position>10</Position>
+      <DataType>int(11)|0</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="50" parent="17" name="ix_movie_status">
+      <ColNames>status</ColNames>
+    </index>
+    <index id="51" parent="17" name="name">
+      <ColNames>name</ColNames>
+      <Unique>1</Unique>
+    </index>
+    <key id="52" parent="17" name="PRIMARY">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>mid</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="53" parent="17" name="name">
+      <ColNames>name</ColNames>
+      <UnderlyingIndexName>name</UnderlyingIndexName>
+    </key>
+  </database-model>
+</dataSource>

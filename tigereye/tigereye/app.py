@@ -12,6 +12,7 @@ def create_app(debug=True):
     app.json_encoder = JSONEncoder
     # 替换掉json 的encoder方法
 
+    # 自定义了api方法,就要在这里注册
     MiscView.register(app)
     CinemaView.register(app)
     MovieView.register(app)

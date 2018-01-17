@@ -1,14 +1,20 @@
-from tigereye.models import db
+from tigereye.models import db, Model
 
 
-class Hall(db.Model):
+# 影厅
+#     id
+#     影院id
+#     名称
+#     屏幕类型
+#     音效  audio_type
+#     座位数量
+#     状态
+
+class Hall(db.Model, Model):
     hid = db.Column(db.Integer, primary_key=True)
     cid = db.Column(db.Integer)
-    name = db.Column(db.String(64), unique=True, nullable=False)
-    screen = db.Column(db.String(32))
-    # 音效
-    auto_type = db.Column(db.String(32))
-    # 座位数量
-    seats_num = db.Column(db.Integer, default=0, nullable=False)
-    # 状态
-    status = db.Column(db.Integer, nullable=False, index=True)
+    name = db.Column(db.String(200), nullable=False)
+    screen_type = db.Column(db.String(32))
+    audio_type = db.Column(db.String(32))
+    seatus_num = db.Column(db.Integer, default=0, nullable=False)
+    status = db.Column(db.Integer, default=0, index=True, nullable=False)

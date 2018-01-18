@@ -33,6 +33,7 @@ def createdb():
     from tigereye.models.play import Play
     from tigereye.models.seat import Seat
     from tigereye.models.order import Order
+    from tigereye.helper.code import Code
     db.create_all()
 
 

@@ -59,7 +59,7 @@ class Cinema(db.Model, Model):
                 hall.save()
 
                 seats = []
-                for s in range(1, hall.seatus_num + 1):
+                for s in range(1, hall.seats_num + 1):
                     seat = Seat()
                     seat.cid = cinema.cid
                     seat.hid = hall.hid

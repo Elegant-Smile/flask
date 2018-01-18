@@ -1,6 +1,26 @@
+from enum import unique, Enum
+from random import randint
+
+from tigereye.helper import tetime
 from tigereye.models import db, Model
 from sqlalchemy import text
 from sqlalchemy import func
+
+
+@unique
+class OrderStatus(Enum):
+    """已锁座"""
+    locked = 1
+    """解锁"""
+    unlocked = 2
+    """自动解锁(超过一定时间未操作被系统自动解锁)"""
+    auto_unlocked = 3
+    """已支付"""
+    paid = 4
+    """已出票"""
+    printed = 5
+    """退款"""
+    refund = 6
 
 
 # 订单
@@ -9,7 +29,6 @@ from sqlalchemy import func
 #     影厅id
 #     电影id
 #     排期id
-#
 #     创建时间
 #     票
 #         票数
@@ -37,6 +56,7 @@ class Order(db.Model, Model):
     # 取票码
     ticket_flag = db.Column(db.String(64))
 
+    # 票数
     ticket_num = db.Column(db.Integer)
     amount = db.Column(db.Integer)
 
@@ -46,3 +66,22 @@ class Order(db.Model, Model):
     created_time = db.Column(db.DateTime, server_default=text('CURRENT_TIMESTAMP'))
     updated_time = db.Column(db.DateTime, onupdate=func.now())
     status = db.Column(db.Integer, default=0, index=True, nullable=False)
+
+    # sid 座位id
+    @classmethod
+    def create(cls, cid, pid, sid):
+        order = cls()
+        order.oid = '%s%s%s' % (tetime.now(), randint(100000, 999999), pid)
+        order.cid = cid
+        order.pid = pid
+        # 如果座位id是列表,就拼接成字符串
+        if type(sid) == list:
+            cls.join = ','.join(str(i) for i in sid)
+            order.sid = cls.join
+        else:
+            order.sid = sid
+        return order
+
+    @classmethod
+    def getby_orderno(cls, orderno):
+        return Order.query.filter_by(seller_order_no=orderno).first()

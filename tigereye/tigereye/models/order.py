@@ -52,7 +52,7 @@ class Order(db.Model, Model):
     seller_order_no = db.Column(db.String(32), index=True)
     cid = db.Column(db.Integer)
     pid = db.Column(db.Integer)
-    sid = db.Column(db.Integer)
+    sid = db.Column(db.String(32))
     # 取票码
     ticket_flag = db.Column(db.String(64))
 
@@ -85,3 +85,14 @@ class Order(db.Model, Model):
     @classmethod
     def getby_orderno(cls, orderno):
         return Order.query.filter_by(seller_order_no=orderno).first()
+
+    def gen_ticket_flag(self):
+        self.ticket_flag = ''.join([str(randint(1000, 9999)) for i in range(8)])
+
+    def validate(self, ticket_flag):
+        return self.ticket_flag == ticket_flag
+
+    # 为啥有的要用静态方法,是因为不要直接实例化对象,直接能点方法,一切都是为了简便
+    @classmethod
+    def getby_ticket_flag(cls, ticket_flag):
+        return cls.query.filter_by(ticket_flag=ticket_flag).first()

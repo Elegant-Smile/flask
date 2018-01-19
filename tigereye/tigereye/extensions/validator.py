@@ -4,6 +4,7 @@ from flask import request, jsonify
 
 from tigereye.helper.code import Code
 
+
 # 为什么要用类,是为了传参数
 class Validator(object):
     def __init__(self, **parameter_template):
@@ -36,6 +37,28 @@ class Validator(object):
         return decoreted_function
 
 
+class ValidationError(Exception):
+    def __init__(self, message, values):
+        super().__init__(message)
+        self.values = values
+
+
 # sperator=','这样是为了不管是逗号,还是什么符号,都能被切割
 def multi_int(values, sperator=','):
     return [int(i) for i in values.split(sperator)]
+
+
+def complex_int(values, sperator='-'):
+    '''1-200-5000,2-200-5000'''
+    digits = values.split(sperator)
+    result = []
+    for digit in digits:
+        if not digit.isdigit():
+            raise ValidationError('comlex int error : %s' % values, values)
+        result.append(int(digit))
+    return result
+
+
+def multi_complex_int(values, sperator=','):
+    '''1-200-5000,2-200-5000'''
+    return [complex_int(i) for i in values.split(sperator)]

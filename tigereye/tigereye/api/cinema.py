@@ -1,4 +1,3 @@
-
 from tigereye.extensions.validator import Validator
 from flask import jsonify, request
 from tigereye.models.cinema import Cinema
@@ -10,7 +9,7 @@ from tigereye.models.play import Play
 
 
 class CinemaView(ApiView):
-    def index(self):
+    def all(self):
         cinemas = Cinema.query.all()
         # print(cinemas)
         return cinemas
@@ -28,9 +27,14 @@ class CinemaView(ApiView):
         cid = request.params['cid']
         cinema = Cinema.get(cid)
         if not cinema:
-            # return 1, request.args
+            # return 1, request.args 是为了自定了response,
             return Code.cinema_does_not_exist, request.args
         cinema.halls = Hall.query.filter_by(cid=cid).all()
+        # return jsonify({
+        #     'rc': 0,
+        #     'msg': 'succ',
+        #     'data': cinema,
+        # })
         return cinema
 
     @Validator(cid=int)
@@ -46,4 +50,3 @@ class CinemaView(ApiView):
 
         # 为啥返回的是cinema
         return cinema
-

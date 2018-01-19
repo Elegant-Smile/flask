@@ -5,6 +5,8 @@ from flask.json import jsonify
 from flask_classy import FlaskView
 from tigereye.helper.code import Code
 
+
+# 自定义类视图,继承了flaskView,对改写
 class ApiView(FlaskView):
     @classmethod
     # 重写这个方法
@@ -46,22 +48,21 @@ class ApiView(FlaskView):
 
             # 判断是不是一个Response对象
             # isinstance(object, classinfo)
-            # 参数
-            # object -- 实例对象。
-            # classinfo -- 可以是直接或间接类名、基本类型或者有它们组成的元组
-            if not isinstance(response, Response):
+            # 参数  # object -- 实例对象。  # classinfo -- 可以是直接或间接类名、基本类型或者有它们组成的元组
+            if not isinstance(response, Response):  # 大写Response, flask默认的返回对象
                 # 如果不是,则先获取他的类型
                 response_type = type(response)
                 # 如果是tuple类型,并且长度大于1,这能证明什么
                 if response_type == tuple and len(response) > 1:
-
                     # tuple 一分为二
                     rc, _data = response
-                    return jsonify(rc=rc.value, msg=rc.name, data=_data)
+                    return jsonify(rc=rc.value, msg=rc.name, data=_data)  # jsonify flask默认的对象
                 else:
                     # 已经 成功返回
+                    # return jsonify(rc=0, msg='succ', data=response)
                     return jsonify(rc=Code.succ.value, msg=Code.succ.name, data=response)
-                # -----------自定义内容结束----------- #
+                    # -----------自定义内容结束----------- #
+            # 这是源码
             # if not isinstance(response, Response):
             #     response = make_response(response)
 

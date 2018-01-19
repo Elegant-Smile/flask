@@ -1,5 +1,8 @@
 from datetime import datetime
 import math
+
+from flask import current_app
+
 from tigereye.models import db, Model
 import faker
 import random
@@ -93,5 +96,6 @@ class Cinema(db.Model, Model):
                         ps.copy(seat)
                         ps.put()
                     PlaySeat.commit()
-                    print(' playseat')
-            print('create test data done !')
+                    # print(' playseat')
+        print('create test data done !')#
+        current_app.logger.info('create test data done')

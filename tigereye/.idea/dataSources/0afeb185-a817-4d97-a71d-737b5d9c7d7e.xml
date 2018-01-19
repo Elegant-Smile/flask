@@ -200,7 +200,7 @@
     </column>
     <column id="61" parent="18" name="sid">
       <Position>5</Position>
-      <DataType>int(11)|0</DataType>
+      <DataType>varchar(32)|0</DataType>
     </column>
     <column id="62" parent="18" name="ticket_flag">
       <Position>6</Position>

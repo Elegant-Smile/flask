@@ -1,7 +1,7 @@
-from tigereye.extensions.validator import Validator, multi_int
+from tigereye.extensions.validator import Validator, multi_int, multi_complex_int
 from flask_classy import route
 from flask import request
-
+from datetime import datetime
 from tigereye.api import ApiView
 from tigereye.helper.code import Code
 from tigereye.models.order import Order, OrderStatus
@@ -39,8 +39,9 @@ class SeatView(ApiView):
         order.seller_order_no = orderno
         # OrderStatus 是自定义的方法,锁定的值为1
         order.status = OrderStatus.locked.value
-        # 订单的票数 = 自定义的 lock方法的返回值
+        # 订单的票数 = 自定义的 lock方法的返回值 是那个操作数
         order.ticket_num = locked_seats_num
+        # 这个save 是自定义了一个类,然后多继承
         order.save()
         return {'locked_seats_num': locked_seats_num}
 
@@ -66,3 +67,36 @@ class SeatView(ApiView):
         order.status = OrderStatus.unlocked.value
         order.save()
         return {'unlock_seats_num': unlockted_seats_num}
+
+    # 1,200,5000|2,200,5000 传过来的数据是这样
+    @Validator(seats=multi_complex_int, orderno=str)
+    @route('/buy/', methods=['POST'])
+    def buy(self):
+        seats = request.params['seats']
+        orderno = request.params['orderno']
+        order = Order.getby_orderno(orderno)
+        if not order:
+            return Code.order_does_not_exist, request.params
+        if order.status != OrderStatus.locked.value:
+            return Code.order_status_error, {
+                'orderno': orderno,
+                'status': order.status,
+            }
+
+        order.seller_order_no = request.params['orderno']
+        order.amount = order.amount or 0
+        sid_list = []
+        for sid, handle_fee, price in seats:
+            sid_list.append(sid)
+            order.amount += handle_fee + price
+        bought_seats_num = PlaySeat.buy(orderno, order.pid, sid_list)
+        if not bought_seats_num:
+            return Code.seat_buy_failed, {}
+        order.ticket_num = len(seats)
+        order.paid_time = datetime.now()
+        order.status = OrderStatus.paid.value
+        order.gen_ticket_flag()
+        order.save()
+        return {'bought_seats_num': bought_seats_num,
+                'ticket_flag': order.ticket_flag,
+                }

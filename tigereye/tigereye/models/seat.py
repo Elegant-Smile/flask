@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from flask import request
+
 from tigereye.models import db, Model
 from sqlalchemy import text
 from enum import Enum, unique
@@ -123,7 +125,7 @@ class PlaySeat(db.Model, Model):
 
     @classmethod
     # 类方法,能直接被类. 调用
-    def lock(cls, orderno, pid, sid):
+    def lock(cls, orderno, pid, sid_list):
         # 事物
         session = db.create_scoped_session()
         # query能直接放对象吗?<sql:query>标签用来运行SQL SELECT语句，
@@ -135,7 +137,7 @@ class PlaySeat(db.Model, Model):
             # Seatstatus 自定义类方法
             PlaySeat.status == SeatStatus.ok.value,
             # sqlalchemy in语法查询，查询id 在一个list里的所有集合
-            PlaySeat.sid.in_(sid)
+            PlaySeat.sid.in_(sid_list)
         ).update({
             'orderno': orderno,
             'status': SeatStatus.locked.value,
@@ -143,24 +145,82 @@ class PlaySeat(db.Model, Model):
             # 属于 update 的参数 synchronize_session用于query在进行delete or update操作时，对session的同步策略。
             # False - 不对session进行同步，直接进行delete or update操作。
         }, synchronize_session=False)
-        if rows != len(sid):
+        if rows != len(sid_list):
             session.rollback()
             return 0
         session.commit()
         return rows
 
     @classmethod
-    def unlock(cls, orderno, pid, sid):
+    def unlock(cls, orderno, pid, sid_list):
         session = db.create_scoped_session()
         rows = session.query(PlaySeat).filter_by(
             orderno=orderno,
             status=SeatStatus.locked.value).update({
             'orderno': None,
             'status': SeatStatus.ok.value,
-        })
-        if rows != len(sid):
+        }, synchronize_session=False)
+        if rows != len(sid_list):
             session.rollback()
             # 返回的是0,
             return 0
         session.commit()
         return rows
+
+    @classmethod
+    def buy(cls, orderno, pid, sid_list):
+        session = db.create_scoped_session()
+        rows = session.query(PlaySeat).filter_by(
+            orderno=orderno,
+            status=SeatStatus.locked.value
+        ).update({
+            'status': SeatStatus.sold.value,
+        }, synchronize_session=False)
+        if rows != len(sid_list):
+            session.rollback()
+            # 返回的是0,
+            return 0
+        session.commit()
+        return rows
+
+    @classmethod
+    def refund(cls, orderno, pid, sid_list):
+        session = db.create_scoped_session()
+        rows = session.query(PlaySeat).filter_by(
+            orderno=orderno,
+            status=SeatStatus.sold.value
+            # 把座位的状态码改了,订单号改为无
+        ).update({
+            'status': SeatStatus.ok.value,
+            'orderno': None,
+        }, synchronize_session=False)
+        if rows != len(sid_list):
+            session.rollback()
+            # 返回的是0,
+            return 0
+        session.commit()
+        return rows
+
+    @classmethod
+    def print_tickets(cls, orderno, pid, sid_list):
+        session = db.create_scoped_session()
+        rows = session.query(PlaySeat).filter_by(
+            orderno=orderno,
+            status=SeatStatus.sold.value
+            # 把座位的状态码改了,订单号改为无
+        ).update({
+            'status': SeatStatus.ok.value,
+            'orderno': None,
+        }, synchronize_session=False)
+        # 如果操作数和 座位数长度不一样就回滚
+        if rows != len(sid_list):
+            session.rollback()
+            # 返回的是0,
+            return 0
+        session.commit()
+        return rows
+
+    @classmethod
+    def getby_orderno(cls, orderno):
+        # filter的时候条件之间是使用“=="，fitler_by使用的是"="
+        return cls.query.filter_by(orderno=orderno).all()

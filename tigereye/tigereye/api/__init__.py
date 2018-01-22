@@ -1,6 +1,6 @@
 import functools
-
-from flask import request, Response, make_response
+import time
+from flask import request, Response, make_response, current_app
 from flask.json import jsonify
 from flask_classy import FlaskView
 from tigereye.helper.code import Code
@@ -8,6 +8,20 @@ from tigereye.helper.code import Code
 
 # 自定义类视图,继承了flaskView,对改写
 class ApiView(FlaskView):
+    # 自定义的方法
+    def before_request(self, name, **kwargs):
+        self.request_start_time = time.time()
+        # print(2)
+        # print(self.request_start_time)
+
+    def after_request(self, name, response):
+        # current_app 是全局变量
+        current_app.logger.info('%s response time :%s' % (request.path, time.time() - self.request_start_time))
+        # 请求的路径 以及所花费的时间
+        # print(1)
+        # print(response)
+        return response
+
     @classmethod
     # 重写这个方法
     def make_proxy_method(cls, name):
@@ -56,11 +70,11 @@ class ApiView(FlaskView):
                 if response_type == tuple and len(response) > 1:
                     # tuple 一分为二
                     rc, _data = response
-                    return jsonify(rc=rc.value, msg=rc.name, data=_data)  # jsonify flask默认的对象
+                    response = jsonify(rc=rc.value, msg=rc.name, data=_data)  # jsonify flask默认的对象
                 else:
                     # 已经 成功返回
                     # return jsonify(rc=0, msg='succ', data=response)
-                    return jsonify(rc=Code.succ.value, msg=Code.succ.name, data=response)
+                    response = jsonify(rc=Code.succ.value, msg=Code.succ.name, data=response)
                     # -----------自定义内容结束----------- #
             # 这是源码
             # if not isinstance(response, Response):

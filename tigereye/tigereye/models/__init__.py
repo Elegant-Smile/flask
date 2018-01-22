@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from flask import json as _json
 
 db = SQLAlchemy()
 
-#自定义了这样一个类,简化数据库操作
+
+# 自定义了这样一个类,简化数据库操作
 class Model(object):
     @classmethod
     def get(cls, primary_key):
@@ -36,12 +39,15 @@ class Model(object):
 
     def __json__(self):
         # vars():函数以字典形式返回参数中每个成员的当前值
-        keys = vars(self).keys()
+        # keys = vars(self).keys()
         data = {}
-        for key in keys:
-            if not key.startswith('_'):
-                # 获取传入参数的值
-                data[key] = getattr(self, key)
+        for k, v in vars(self).items():
+            if k.startswith('_'):
+                continue
+            if isinstance(v, datetime):
+                v = v.strftime('%Y%m%d%H%M%S')
+            data[k] = v
+        # print(data)
         return data
 
 

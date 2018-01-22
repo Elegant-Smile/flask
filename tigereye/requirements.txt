@@ -4,3 +4,5 @@ flask_script
 flask_SQLAlchemy
 pymysql
 faker
+gunicorn
+redis
